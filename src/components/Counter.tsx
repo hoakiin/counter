@@ -4,9 +4,11 @@ import { Button } from "./Button";
 
 type Props = {
   version: number;
+  error: boolean;
+  isSetMode: boolean;
 };
 
-export const Counter = ({version}: Props) => {
+export const Counter = ({version, error, isSetMode}: Props) => {
   const minValue = Number(localStorage.getItem("minValue")) || 0;
   const maxValue = Number(localStorage.getItem("maxValue")) || 5;
 
@@ -26,17 +28,17 @@ export const Counter = ({version}: Props) => {
 
   return (
     <div className="counter">
-      <Display count={count} maxValue={maxValue} />
+      <Display count={count} maxValue={maxValue} error={error} isSetMode={isSetMode} />
       <div className="buttonsWrapper">
         <Button
           title={"+"}
           onClick={increaseBtnHandler}
-          disabled={count === maxValue}
+          disabled={count === maxValue || isSetMode || error}
         />
         <Button
           title={"reset"}
           onClick={resetBtnHandler}
-          disabled={count === 0}
+          disabled={count === 0 || isSetMode || error}
         />
       </div>
     </div>
