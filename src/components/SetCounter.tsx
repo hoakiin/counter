@@ -10,11 +10,14 @@ type Props = {
 };
 
 export const SetCounter = ({ onSet, setIsSetMode, error, setError }: Props) => {
+  const DEFAULT_MAX_VALUE = 5;
+  const DEFAULT_MIN_VALUE = 0;
+
   let [maxValue, setMaxValue] = useState<number>(
-    Number(localStorage.getItem("maxValue")) || 5
+    Number(localStorage.getItem("maxValue")) || DEFAULT_MAX_VALUE
   );
   let [minValue, setMinValue] = useState<number>(
-    Number(localStorage.getItem("minValue")) || 0
+    Number(localStorage.getItem("minValue")) || DEFAULT_MIN_VALUE
   );
 
   const minError = minValue < 0 || minValue >= maxValue;
@@ -34,26 +37,49 @@ export const SetCounter = ({ onSet, setIsSetMode, error, setError }: Props) => {
     onSet();
   };
 
+  const hasLeadingZero = (value: string) =>
+    value.length > 1 && value.startsWith("0");
+
   const minValueHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setMinValue(Number(e.currentTarget.value));
-    setIsSetMode(true)
+    const value = e.currentTarget.value;
+    if (hasLeadingZero(value)) {
+      setError(true);
+      return;
+    }
+    setMinValue(Number(value));
+    setIsSetMode(true);
   };
 
   const maxValueHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setMaxValue(Number(e.currentTarget.value));
-    setIsSetMode(true)
+    const value = e.currentTarget.value;
+    if (hasLeadingZero(value)) {
+      setError(true);
+      return;
+    }
+    setMaxValue(Number(value));
+    setIsSetMode(true);
   };
 
   return (
     <div className="counter">
       <div className="display setCounter">
         <label>
-          max value:{" "}
-          <input className={maxError ? "error" : ""} type="number" onChange={maxValueHandler} value={maxValue} />
+          max value:
+          <input
+            className={maxError ? "error" : ""}
+            type="number"
+            onChange={maxValueHandler}
+            value={maxValue}
+          />
         </label>
         <label>
-          min value:{" "}
-          <input className={minError ? "error" : ""} type="number" onChange={minValueHandler} value={minValue} />
+          min value:
+          <input
+            className={minError ? "error" : ""}
+            type="number"
+            onChange={minValueHandler}
+            value={minValue}
+          />
         </label>
       </div>
       <div className="buttonsWrapper">

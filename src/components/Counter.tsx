@@ -8,7 +8,7 @@ type Props = {
   isSetMode: boolean;
 };
 
-export const Counter = ({version, error, isSetMode}: Props) => {
+export const Counter = ({ version, error, isSetMode }: Props) => {
   const minValue = Number(localStorage.getItem("minValue")) || 0;
   const maxValue = Number(localStorage.getItem("maxValue")) || 5;
 
@@ -16,7 +16,7 @@ export const Counter = ({version, error, isSetMode}: Props) => {
 
   useEffect(() => {
     setCount(minValue);
-  }, [version]); 
+  }, [version]);
 
   const increaseBtnHandler = () => {
     setCount(count + 1);
@@ -26,19 +26,27 @@ export const Counter = ({version, error, isSetMode}: Props) => {
     setCount(minValue);
   };
 
+  const isIncreaseDisabled = count === maxValue || isSetMode || error;
+  const isResetDisabled = count === 0 || isSetMode || error;
+
   return (
     <div className="counter">
-      <Display count={count} maxValue={maxValue} error={error} isSetMode={isSetMode} />
+      <Display
+        count={count}
+        maxValue={maxValue}
+        error={error}
+        isSetMode={isSetMode}
+      />
       <div className="buttonsWrapper">
         <Button
           title={"+"}
           onClick={increaseBtnHandler}
-          disabled={count === maxValue || isSetMode || error}
+          disabled={isIncreaseDisabled}
         />
         <Button
           title={"reset"}
           onClick={resetBtnHandler}
-          disabled={count === 0 || isSetMode || error}
+          disabled={isResetDisabled}
         />
       </div>
     </div>
